@@ -36,6 +36,19 @@ jobs:
             MONTH="$(date -u +'%B %Y')"
             COMMIT="$(git -C /tmp/posthog.com rev-parse --short HEAD)"
             COMMIT_URL="https://github.com/PostHog/posthog.com/commit/$(git -C /tmp/posthog.com rev-parse HEAD)"
+            BUILD_DATE="$(date -u +%Y-%m-%d)"
+
+            cat > /tmp/release-notes.md \<< NOTES
+            ## PostHog Handbook — ${MONTH} Edition
+
+            Monthly build of the PostHog company handbook as an EPUB e-book.
+
+            **Source:** [PostHog/posthog.com](https://github.com/PostHog/posthog.com)
+            **Commit:** [\`${COMMIT}\`](${COMMIT_URL})
+            **Built:** ${BUILD_DATE}
+
+            Download the \`.epub\` file below and open it in your favourite e-reader.
+            NOTES
 
             # Delete existing release for this month if re-running
             gh release delete "$TAG" --yes 2>/dev/null || true
@@ -43,18 +56,7 @@ jobs:
             gh release create "$TAG" \
               output/posthog-handbook.epub \
               --title "PostHog Handbook — ${MONTH} Edition" \
-              --notes "$(cat <<EOF
-            ## PostHog Handbook — ${MONTH} Edition
-
-            Monthly build of the PostHog company handbook as an EPUB e-book.
-
-            **Source:** [PostHog/posthog.com](https://github.com/PostHog/posthog.com)
-            **Commit:** [\`${COMMIT}\`](${COMMIT_URL})
-            **Built:** $(date -u +%Y-%m-%d)
-
-            Download the \`.epub\` file below and open it in your favourite e-reader.
-            EOF
-            )"
+              --notes-file /tmp/release-notes.md
 
 workflows:
   monthly-build:
