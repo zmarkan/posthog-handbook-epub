@@ -1,0 +1,9 @@
+*.epub
+cover.jpg
+/cover.png
+output/
+__pycache__/
+*.pyc
+.DS_Store
+venv/
+.venv/
