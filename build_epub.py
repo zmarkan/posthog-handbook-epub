@@ -437,7 +437,7 @@ def build_epub(repo_path: Path, output_path: Path, cover_image: Path | None = No
             generate_cover(cover_path, build_date=build_month)
             cover_with_text = cover_path.read_bytes()
 
-    book.set_cover("cover.png", cover_with_text, create_page=True)
+    book.set_cover("cover.png", cover_with_text, create_page=False)
 
     # ── Stylesheet ──
     css = epub.EpubItem(
@@ -485,7 +485,7 @@ def build_epub(repo_path: Path, output_path: Path, cover_image: Path | None = No
     """
     edition_page.add_item(css)
     book.add_item(edition_page)
-    spine = ["cover", edition_page, "nav"]
+    spine = [edition_page, "nav"]
 
     # ── Part I: Core Chapters (from handbook.json nav) ──
     nav_links = load_nav(repo_path)
