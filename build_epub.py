@@ -456,13 +456,16 @@ def build_epub(repo_path: Path, output_path: Path, cover_image: Path | None = No
     edition_page = epub.EpubHtml(title="About This Edition", file_name="edition.xhtml", lang="en")
     edition_page.content = f"""
     <div style="text-align: center; margin-top: 6em; margin-bottom: 2em;">
-        <p style="font-size: 1.6em; color: #F7A501; font-weight: bold; margin-bottom: 1.5em;">{build_month}</p>
-        <p style="font-size: 1.1em; color: #6b7280; line-height: 1.8; margin-bottom: 0.3em;">
-            Written by the humans and hogs of PostHog
-        </p>
-        <p style="font-size: 1.1em; color: #6b7280; line-height: 1.8; margin-bottom: 2.5em;">
-            Compiled and ebookified by Zan Markan
-        </p>
+        <h1 style="font-size: 2em; margin-bottom: 0.2em;">The PostHog Handbook</h1>
+        <p style="font-size: 1.3em; color: #F7A501; font-weight: bold; margin-bottom: 1.5em;">{edition_label}</p>
+    </div>
+
+    <hr style="width: 40%; margin: 0 auto 2em; border-color: #e5e7eb;" />
+
+    <div style="text-align: center; font-size: 0.85em; color: #9ca3af; line-height: 2;">
+        <p>Written by the humans and hedgehogs of PostHog</p>
+        <p>Compiled and ebookified by Zan Markan</p>
+        <p style="font-style: italic; margin-top: 0.5em;">No hedgehog habitat was destroyed during the making or printing of this ebook.</p>
     </div>
 
     <hr style="width: 40%; margin: 0 auto 2em; border-color: #e5e7eb;" />
@@ -590,6 +593,13 @@ def build_epub(repo_path: Path, output_path: Path, cover_image: Path | None = No
     book.spine = spine
     book.add_item(epub.EpubNcx())
     book.add_item(epub.EpubNav())
+
+    # Set the edition/credits page as the opening page
+    book.guide.append({
+        "type": "text",
+        "title": "About This Edition",
+        "href": "edition.xhtml",
+    })
 
     # Write
     output_path.parent.mkdir(parents=True, exist_ok=True)
